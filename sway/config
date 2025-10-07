@@ -14,7 +14,8 @@ set $down j
 set $up k
 set $right l
 # Your preferred terminal emulator
-set $term alacritty --config-file /etc/alacritty/alacritty.toml
+#set $term alacritty --config-file /etc/alacritty/alacritty.toml
+set $term wezterm
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
@@ -22,6 +23,9 @@ set $term alacritty --config-file /etc/alacritty/alacritty.toml
 # it is set in config.d/50-openSUSE.conf
 
 exec nm-applet --indicator
+
+## xdg desktop portal wlr - screen share
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 ### Output configuration
 #
@@ -35,21 +39,26 @@ output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 # You can get the names of your outputs by running: swaymsg -t get_outputs
 
 # Multi monitor
+output DP-1 pos 0 0
 output DP-3 pos 0 0
 output eDP-1 pos 0 1080
 
+# enable and disable notebook monitor
+bindsym $mod+Shift+m output "eDP-1" disable
+
 # PrintScreen
 set $printscreen exec hyprshot -m region --clipboard-only -z
-bindsym Print $printscreen
+bindsym $mod+Shift+p $printscreen
+
 
 ### Idle configuration
 #
 # Example configuration:
 #
 exec swayidle -w \
-         timeout 300 'swaylock -f -c 000000' \
-         timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-         before-sleep 'swaylock -f -c 000000'
+         timeout 3000 'swaylock -f -c 0c322c' \
+         timeout 6000 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+         before-sleep 'swaylock -f -c 0c322c'
 #
 # This will lock your screen after 300 seconds of inactivity, then turn off
 # your displays after another 300 seconds, and turn your screens back on when
@@ -85,7 +94,7 @@ input type:keyboard {
     bindsym $mod+Shift+q kill
 
     # Start your launcher
-    bindsym $mod+d exec $menu
+    bindsym $mod+Space exec $menu
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -176,7 +185,7 @@ input type:keyboard {
     bindsym $mod+Shift+space floating toggle
 
     # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
+    bindsym $mod+o focus mode_toggle
 
     # Move focus to the parent container
     bindsym $mod+a focus parent
@@ -216,6 +225,18 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
+
+mode "powermenu" {
+    bindsym $mod+s exec systemctl poweroff
+    bindsym $mod+r exec systemctl reboot
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+p mode "powermenu"
+
+bindsym $mod+Mod1+l exec swaylock -f -c 0c322c
 
 #
 # Status Bar:
