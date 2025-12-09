@@ -1,0 +1,36 @@
+xkb_keymap {
+    xkb_keycodes  { include "evdev+aliases(qwerty)" };
+    xkb_types     { include "complete" };
+    xkb_compat    { include "complete" };
+    xkb_symbols   {
+        include "pc+us+inet(evdev)"
+
+        // map right alt to level 3 shift
+        include "level3(ralt_switch)"
+
+        // redefine caps to left alt
+        key <CAPS> { [ Alt_L, Meta_L ] };
+        // redefine left alt to caps lock
+        key <LALT> { [ Caps_Lock ] };
+
+        modifier_map Lock { <LALT> };
+        modifier_map Mod1 { <CAPS> };
+        modifier_map Mod5 { <CAPS> };
+
+        // CapsLock + n = ~ (dead_tilde)
+        key <AB06> { [ n, N, dead_tilde, asciitilde ] };
+
+        // CapsLock + i = ^ (dead_circumflex)
+        key <AD08> { [ i, I, dead_circumflex, asciicircum ] };
+
+        // CapsLock + e = ´ (dead_acute)
+        key <AD03> { [ e, E, dead_acute, acute ] };
+
+        // CapsLock + u = ¨ (dead_diaeresis)
+        key <AD07> { [ u, U, dead_diaeresis, diaeresis ] };
+
+        // CapsLock + ` = ` (dead_grave)
+        key <TLDE> { [ grave, asciitilde, dead_grave, grave ] };
+    };
+    xkb_geometry  { include "pc(pc105)" };
+};
